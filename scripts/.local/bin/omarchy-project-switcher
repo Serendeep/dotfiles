@@ -1,0 +1,28 @@
+#!/bin/bash
+# Quick project directory switcher
+# Searches for git repositories and opens a terminal in the selected project
+
+PROJECTS_DIR="${PROJECTS_DIR:-/mnt/Storage/Development}"
+
+# Build find paths from colon-separated list
+IFS=':' read -ra PATHS <<< "$PROJECTS_DIR"
+SEARCH_PATHS=()
+for path in "${PATHS[@]}"; do
+    [ -d "$path" ] && SEARCH_PATHS+=("$path")
+done
+
+if [ ${#SEARCH_PATHS[@]} -eq 0 ]; then
+    notify-send "Project Switcher" "No project directories found. Set PROJECTS_DIR env var."
+    exit 1
+fi
+
+# Find all git repos and let user select one
+PROJECT=$(find "${SEARCH_PATHS[@]}" -maxdepth 3 -type d -name ".git" 2>/dev/null | \
+    sed 's|/.git$||' | \
+    sort -u | \
+    walker --dmenu --placeholder "Select project...")
+
+if [ -n "$PROJECT" ] && [ -d "$PROJECT" ]; then
+    # Open terminal in the selected project directory
+    cd "$PROJECT" && uwsm-app -- ghostty --working-directory="$PROJECT"
+fi

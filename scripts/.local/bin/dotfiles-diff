@@ -1,0 +1,37 @@
+#!/bin/bash
+# Compare current dotfiles configs against omarchy .bak files
+# Shows what you've changed from the omarchy defaults
+
+CONFIGS=(
+    hypr/hyprland.conf
+    hypr/bindings.conf
+    hypr/looknfeel.conf
+    hypr/input.conf
+    hypr/autostart.conf
+    hypr/hypridle.conf
+    hypr/hyprlock.conf
+    waybar/config.jsonc
+    waybar/style.css
+    walker/config.toml
+)
+
+bold="\033[1m"
+reset="\033[0m"
+dim="\033[2m"
+
+for cfg in "${CONFIGS[@]}"; do
+    current="$HOME/.config/$cfg"
+    # Find the most recent .bak file
+    latest_bak=$(ls -t "$current".bak* 2>/dev/null | head -1)
+
+    if [ -z "$latest_bak" ]; then
+        continue
+    fi
+
+    diff_output=$(diff -u "$latest_bak" "$current" 2>/dev/null)
+    if [ -n "$diff_output" ]; then
+        echo -e "${bold}$cfg${reset} ${dim}(vs $(basename "$latest_bak"))${reset}"
+        echo "$diff_output" | tail -n +3
+        echo ""
+    fi
+done

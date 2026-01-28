@@ -1,0 +1,26 @@
+#!/bin/bash
+# Waybar Docker Status Widget
+
+# Check if docker is available
+if ! command -v docker &>/dev/null; then
+    echo '{"text": "", "class": "hidden"}'
+    exit 0
+fi
+
+# Check if docker daemon is running
+if ! docker info &>/dev/null 2>&1; then
+    echo '{"text": "󰡨", "tooltip": "Docker daemon not running", "class": "stopped"}'
+    exit 0
+fi
+
+# Count running containers
+RUNNING=$(docker ps -q 2>/dev/null | wc -l)
+TOTAL=$(docker ps -aq 2>/dev/null | wc -l)
+
+if [ "$RUNNING" -eq 0 ]; then
+    echo "{\"text\": \"󰡨\", \"tooltip\": \"No containers running ($TOTAL total)\", \"class\": \"idle\"}"
+else
+    # Get container names
+    NAMES=$(docker ps --format '{{.Names}}' 2>/dev/null | tr '\n' ', ' | sed 's/,$//')
+    echo "{\"text\": \"󰡨 $RUNNING\", \"tooltip\": \"Running: $NAMES\\nTotal: $TOTAL containers\", \"class\": \"running\"}"
+fi

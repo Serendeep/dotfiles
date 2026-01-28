@@ -1,0 +1,10 @@
+#!/bin/bash
+# Toggle Spotify scratchpad
+
+if hyprctl clients -j | jq -e '.[] | select(.class == "spotify")' > /dev/null 2>&1; then
+    hyprctl dispatch togglespecialworkspace music
+else
+    uwsm-app -- spotify &
+    sleep 1
+    hyprctl dispatch togglespecialworkspace music
+fi

@@ -1,0 +1,251 @@
+@import "../omarchy/current/theme/waybar.css";
+
+/* Floating pill bar */
+window#waybar {
+  background: alpha(@background, 0.88);
+  border-radius: 12px;
+  border: 1px solid alpha(#b4a7d6, 0.15);
+}
+
+/* Tooltips - opaque background */
+tooltip {
+  background: #0f0f14;
+  border: 1px solid alpha(#b4a7d6, 0.3);
+  border-radius: 8px;
+}
+
+tooltip label {
+  color: #e8e6e3;
+  padding: 4px 8px;
+}
+
+* {
+  background-color: transparent;
+  color: @foreground;
+
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+  font-family: 'CaskaydiaMono Nerd Font';
+  font-size: 12px;
+}
+
+.modules-left {
+  margin-left: 8px;
+}
+
+.modules-right {
+  margin-right: 8px;
+}
+
+#workspaces button {
+  all: initial;
+  padding: 0 6px;
+  margin: 0 1.5px;
+  min-width: 9px;
+}
+
+#workspaces button.empty {
+  opacity: 0.5;
+}
+
+#cpu,
+#battery,
+#pulseaudio,
+#custom-omarchy,
+#custom-screenrecording-indicator,
+#custom-update {
+  min-width: 12px;
+  margin: 0 7.5px;
+}
+
+#tray {
+  margin-right: 16px;
+}
+
+#bluetooth {
+  margin-right: 17px;
+}
+
+#network {
+  margin-right: 13px;
+}
+
+#custom-expand-icon {
+  margin-right: 18px;
+}
+
+tooltip {
+  padding: 2px;
+}
+
+#custom-update {
+  font-size: 10px;
+}
+
+#clock {
+  margin-left: 5px;
+}
+
+#custom-spotify {
+  margin: 0 10px;
+  color: #1db954;
+}
+
+#custom-spotify.paused {
+  color: @foreground;
+  opacity: 0.6;
+}
+
+#custom-spotify.stopped {
+  opacity: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.hidden {
+  opacity: 0;
+}
+
+#custom-screenrecording-indicator {
+  min-width: 12px;
+  margin-left: 5px;
+  font-size: 10px;
+  padding-bottom: 1px;
+}
+
+#custom-screenrecording-indicator.active {
+  color: #a55555;
+}
+
+#custom-voxtype {
+  min-width: 12px;
+  margin: 0 0 0 7.5px;
+}
+
+#custom-voxtype.recording {
+  color: #a55555;
+}
+
+/* Pomodoro Timer */
+#custom-pomodoro {
+  margin: 0 8px;
+}
+
+#custom-pomodoro.idle {
+  opacity: 0.5;
+}
+
+#custom-pomodoro.working {
+  color: #b4a7d6;
+}
+
+#custom-pomodoro.break {
+  color: #a3b899;
+}
+
+#custom-pomodoro.paused {
+  opacity: 0.7;
+}
+
+/* Cava Visualizer */
+#custom-cava {
+  margin: 0 8px;
+  color: #b4a7d6;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+#custom-cava.hidden {
+  font-size: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+/* Network Speed */
+#custom-netspeed {
+  margin: 0 8px;
+  font-size: 10px;
+}
+
+#custom-netspeed.active {
+  color: #8fa3c4;
+}
+
+/* Git Status */
+#custom-git {
+  margin: 0 8px;
+}
+
+#custom-git.clean {
+  color: #a3b899;
+}
+
+#custom-git.dirty {
+  color: #d4c087;
+}
+
+#custom-git.hidden {
+  opacity: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+/* Docker Status */
+#custom-docker {
+  margin: 0 8px;
+}
+
+#custom-docker.running {
+  color: #8fa3c4;
+}
+
+#custom-docker.idle {
+  opacity: 0.5;
+}
+
+#custom-docker.stopped {
+  opacity: 0.3;
+}
+
+#custom-docker.hidden {
+  opacity: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+/* Todo Widget */
+#custom-todo {
+  margin: 0 8px;
+}
+
+#custom-todo.pending {
+  color: #d4c087;
+}
+
+#custom-todo.done {
+  color: #a3b899;
+  opacity: 0.6;
+}
+
+/* Memory */
+#memory {
+  margin: 0 8px;
+  font-size: 10px;
+}
+
+/* Active Window Title */
+#window {
+  color: alpha(@foreground, 0.7);
+  font-style: italic;
+  font-size: 11px;
+  margin: 0 12px;
+}
+
+/* Weather Widget */
+#custom-weather {
+  margin: 0 8px;
+  font-size: 11px;
+}

@@ -1,0 +1,79 @@
+#!/bin/bash
+# Quick Build Runner
+# Detects project type and runs appropriate build command
+
+# Get current directory from focused terminal
+get_terminal_cwd() {
+    local pid=$(hyprctl activewindow -j 2>/dev/null | jq -r '.pid // empty')
+    if [ -n "$pid" ]; then
+        local child=$(pgrep -P "$pid" 2>/dev/null | head -1)
+        if [ -n "$child" ]; then
+            readlink -f "/proc/$child/cwd" 2>/dev/null
+            return
+        fi
+    fi
+    echo "$PWD"
+}
+
+CWD=$(get_terminal_cwd)
+cd "$CWD" || exit 1
+
+notify-send "Quick Build" "Building in $CWD..."
+
+# Detect project type and build
+BUILD_CMD=""
+PROJECT_TYPE=""
+
+if [ -f "package.json" ]; then
+    PROJECT_TYPE="Node.js"
+    if [ -f "pnpm-lock.yaml" ]; then
+        BUILD_CMD="pnpm build"
+    elif [ -f "yarn.lock" ]; then
+        BUILD_CMD="yarn build"
+    else
+        BUILD_CMD="npm run build"
+    fi
+elif [ -f "Cargo.toml" ]; then
+    PROJECT_TYPE="Rust"
+    BUILD_CMD="cargo build --release"
+elif [ -f "go.mod" ]; then
+    PROJECT_TYPE="Go"
+    BUILD_CMD="go build ./..."
+elif [ -f "Makefile" ]; then
+    PROJECT_TYPE="Make"
+    BUILD_CMD="make"
+elif [ -f "CMakeLists.txt" ]; then
+    PROJECT_TYPE="CMake"
+    BUILD_CMD="cmake --build build"
+elif [ -f "pubspec.yaml" ]; then
+    PROJECT_TYPE="Flutter"
+    BUILD_CMD="flutter build"
+elif [ -f "build.gradle" ] || [ -f "build.gradle.kts" ]; then
+    PROJECT_TYPE="Gradle"
+    BUILD_CMD="./gradlew build"
+elif [ -f "pom.xml" ]; then
+    PROJECT_TYPE="Maven"
+    BUILD_CMD="mvn package"
+else
+    notify-send -u critical "Quick Build" "No recognized project type found"
+    exit 1
+fi
+
+# Run build in floating terminal
+uwsm-app -- ghostty --class=quick-build -e bash -c "
+    echo '🔨 Building $PROJECT_TYPE project...'
+    echo '$ $BUILD_CMD'
+    echo ''
+    if $BUILD_CMD; then
+        echo ''
+        echo '✅ Build successful!'
+        notify-send 'Quick Build' '$PROJECT_TYPE build successful!'
+    else
+        echo ''
+        echo '❌ Build failed!'
+        notify-send -u critical 'Quick Build' '$PROJECT_TYPE build failed!'
+    fi
+    echo ''
+    echo 'Press any key to close...'
+    read -n 1
+"

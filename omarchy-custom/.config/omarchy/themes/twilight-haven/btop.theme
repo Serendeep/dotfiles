@@ -1,0 +1,83 @@
+# Twilight Haven theme for btop
+
+# Main background
+theme[main_bg]="#0f0f14"
+
+# Main text color
+theme[main_fg]="#e8e6e3"
+
+# Title color for boxes
+theme[title]="#e8e6e3"
+
+# Highlight color for keyboard shortcuts
+theme[hi_fg]="#b4a7d6"
+
+# Background color of selected items
+theme[selected_bg]="#3d3d47"
+
+# Foreground color of selected items
+theme[selected_fg]="#e8e6e3"
+
+# Color of inactive/disabled text
+theme[inactive_fg]="#6e6e7a"
+
+# Color of text appearing on top of graphs
+theme[graph_text]="#c4c1bd"
+
+# Meter background
+theme[meter_bg]="#3d3d47"
+
+# Box outline and divider colors
+theme[proc_misc]="#b4a7d6"
+
+# Cpu box outline color
+theme[cpu_box]="#b4a7d6"
+
+# Memory/disks box outline color
+theme[mem_box]="#a3b899"
+
+# Net box outline color
+theme[net_box]="#8fa3c4"
+
+# Processes box outline color
+theme[proc_box]="#d4c087"
+
+# Box divider color
+theme[div_line]="#3d3d47"
+
+# Temperature graph colors
+theme[temp_start]="#a3b899"
+theme[temp_mid]="#d4c087"
+theme[temp_end]="#d4878f"
+
+# CPU graph colors
+theme[cpu_start]="#b4a7d6"
+theme[cpu_mid]="#8fa3c4"
+theme[cpu_end]="#d4878f"
+
+# Memory graph colors
+theme[free_start]="#3d3d47"
+theme[free_mid]="#3d3d47"
+theme[free_end]="#3d3d47"
+theme[cached_start]="#8fa3c4"
+theme[cached_mid]="#8fa3c4"
+theme[cached_end]="#8fa3c4"
+theme[available_start]="#a3b899"
+theme[available_mid]="#a3b899"
+theme[available_end]="#a3b899"
+theme[used_start]="#b4a7d6"
+theme[used_mid]="#b4a7d6"
+theme[used_end]="#b4a7d6"
+
+# Network graph colors
+theme[download_start]="#b4a7d6"
+theme[download_mid]="#8fa3c4"
+theme[download_end]="#8fc4bc"
+theme[upload_start]="#a3b899"
+theme[upload_mid]="#d4c087"
+theme[upload_end]="#d4878f"
+
+# Process box color gradient
+theme[process_start]="#b4a7d6"
+theme[process_mid]="#c9bce6"
+theme[process_end]="#e8e6e3"

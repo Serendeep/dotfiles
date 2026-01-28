@@ -1,0 +1,14 @@
+#!/bin/bash
+# Waybar systemd health - show failed service count
+
+failed=$(systemctl --user --failed --no-legend 2>/dev/null | wc -l)
+sys_failed=$(systemctl --failed --no-legend 2>/dev/null | wc -l)
+total=$((failed + sys_failed))
+
+if [ "$total" -eq 0 ]; then
+    echo '{"text": "", "tooltip": "All services healthy", "class": "ok"}'
+else
+    units=$(systemctl --user --failed --no-legend 2>/dev/null; systemctl --failed --no-legend 2>/dev/null)
+    tooltip="Failed services:\n$(echo "$units" | awk '{print $1}' | sed 's/^/  /')"
+    echo "{\"text\": \"󰚌 $total\", \"tooltip\": \"$tooltip\", \"class\": \"failed\"}"
+fi

@@ -1,0 +1,8 @@
+*.bak
+*.bak.*
+lazy-lock.json
+nvim/.config/nvim/lazy-lock.json
+spicetify/.config/spicetify/CustomApps/
+spicetify/.config/spicetify/Extensions/
+omarchy-custom/.config/omarchy/current/
+.DS_Store

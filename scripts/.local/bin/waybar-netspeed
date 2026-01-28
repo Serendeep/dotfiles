@@ -1,0 +1,66 @@
+#!/bin/bash
+# Waybar Network Speed Monitor
+
+INTERFACE=$(ip route | grep default | awk '{print $5}' | head -1)
+CACHE_FILE="/tmp/netspeed-cache"
+
+if [ -z "$INTERFACE" ]; then
+    echo '{"text": "", "tooltip": "No network", "class": "disconnected"}'
+    exit 0
+fi
+
+# Get current bytes
+RX=$(cat /sys/class/net/$INTERFACE/statistics/rx_bytes 2>/dev/null || echo 0)
+TX=$(cat /sys/class/net/$INTERFACE/statistics/tx_bytes 2>/dev/null || echo 0)
+NOW=$(date +%s)
+
+# Read previous values
+if [ -f "$CACHE_FILE" ]; then
+    read -r PREV_RX PREV_TX PREV_TIME < "$CACHE_FILE"
+else
+    PREV_RX=$RX
+    PREV_TX=$TX
+    PREV_TIME=$NOW
+fi
+
+# Save current values
+echo "$RX $TX $NOW" > "$CACHE_FILE"
+
+# Calculate speed
+ELAPSED=$((NOW - PREV_TIME))
+if [ "$ELAPSED" -eq 0 ]; then
+    ELAPSED=1
+fi
+
+RX_SPEED=$(( (RX - PREV_RX) / ELAPSED ))
+TX_SPEED=$(( (TX - PREV_TX) / ELAPSED ))
+
+# Format speed using pure bash
+format_speed() {
+    local speed=$1
+    if [ "$speed" -ge 1073741824 ]; then
+        local gb=$((speed / 1073741824))
+        local rem=$(( (speed % 1073741824) * 10 / 1073741824 ))
+        printf "%d.%dG" $gb $rem
+    elif [ "$speed" -ge 1048576 ]; then
+        local mb=$((speed / 1048576))
+        local rem=$(( (speed % 1048576) * 10 / 1048576 ))
+        printf "%d.%dM" $mb $rem
+    elif [ "$speed" -ge 1024 ]; then
+        printf "%dK" $((speed / 1024))
+    else
+        printf "%dB" $speed
+    fi
+}
+
+DOWN=$(format_speed $RX_SPEED)
+UP=$(format_speed $TX_SPEED)
+
+# Determine activity class
+if [ "$RX_SPEED" -gt 102400 ] || [ "$TX_SPEED" -gt 102400 ]; then
+    class="active"
+else
+    class="idle"
+fi
+
+echo '{"text": "↓'"${DOWN}"' ↑'"${UP}"'", "tooltip": "Interface: '"$INTERFACE"'\nDown: '"${DOWN}"'/s\nUp: '"${UP}"'/s", "class": "'"$class"'"}'

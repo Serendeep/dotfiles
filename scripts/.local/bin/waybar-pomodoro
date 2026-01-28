@@ -1,0 +1,104 @@
+#!/bin/bash
+# Waybar Pomodoro Timer
+# Click to toggle, right-click to reset
+# Long break (15min) every 4 work sessions
+
+STATE_FILE="/tmp/pomodoro-state"
+WORK_TIME=1500   # 25 minutes
+BREAK_TIME=300   # 5 minutes
+LONG_BREAK=900   # 15 minutes
+CYCLE_FOR_LONG=4
+
+# Initialize state file if not exists
+if [ ! -f "$STATE_FILE" ]; then
+    echo "stopped:0:work:0" > "$STATE_FILE"
+fi
+
+toggle_timer() {
+    IFS=: read -r state remaining mode completed < "$STATE_FILE"
+    completed=${completed:-0}
+    if [ "$state" = "stopped" ]; then
+        if [ "$mode" = "work" ]; then
+            echo "running:$WORK_TIME:work:$completed" > "$STATE_FILE"
+        else
+            if [ "$mode" = "longbreak" ]; then
+                echo "running:$LONG_BREAK:longbreak:$completed" > "$STATE_FILE"
+            else
+                echo "running:$BREAK_TIME:break:$completed" > "$STATE_FILE"
+            fi
+        fi
+    else
+        echo "stopped:$remaining:$mode:$completed" > "$STATE_FILE"
+    fi
+}
+
+reset_timer() {
+    echo "stopped:0:work:0" > "$STATE_FILE"
+    notify-send "Pomodoro" "Timer reset"
+}
+
+# Handle click actions
+case "$1" in
+    toggle) toggle_timer; exit 0 ;;
+    reset) reset_timer; exit 0 ;;
+esac
+
+# Read current state
+IFS=: read -r state remaining mode completed < "$STATE_FILE"
+completed=${completed:-0}
+
+# Update timer if running
+if [ "$state" = "running" ]; then
+    if [ "$remaining" -le 0 ]; then
+        if [ "$mode" = "work" ]; then
+            completed=$((completed + 1))
+            if [ $((completed % CYCLE_FOR_LONG)) -eq 0 ]; then
+                notify-send -u critical "Pomodoro" "Nice! $completed sessions done. Take a long break."
+                echo "stopped:$LONG_BREAK:longbreak:$completed" > "$STATE_FILE"
+                mode="longbreak"
+            else
+                notify-send -u critical "Pomodoro" "Work session complete! Time for a break."
+                echo "stopped:$BREAK_TIME:break:$completed" > "$STATE_FILE"
+                mode="break"
+            fi
+            state="stopped"
+        else
+            notify-send -u critical "Pomodoro" "Break over! Ready to work?"
+            echo "stopped:$WORK_TIME:work:$completed" > "$STATE_FILE"
+            mode="work"
+            state="stopped"
+            remaining=$WORK_TIME
+        fi
+    else
+        echo "running:$((remaining - 1)):$mode:$completed" > "$STATE_FILE"
+    fi
+fi
+
+# Format output
+if [ "$state" = "stopped" ] && [ "$remaining" -eq 0 ]; then
+    text="󰄉"
+    tooltip="Pomodoro: Click to start"
+    class="idle"
+else
+    mins=$((remaining / 60))
+    secs=$((remaining % 60))
+    if [ "$state" = "running" ]; then
+        if [ "$mode" = "work" ]; then
+            text="󰔟 ${mins}:$(printf '%02d' $secs)"
+            class="working"
+        elif [ "$mode" = "longbreak" ]; then
+            text="󰾨 ${mins}:$(printf '%02d' $secs)"
+            class="longbreak"
+        else
+            text="󰾨 ${mins}:$(printf '%02d' $secs)"
+            class="break"
+        fi
+        tooltip="$mode ($completed sessions) - click to pause"
+    else
+        text="󰏤 ${mins}:$(printf '%02d' $secs)"
+        class="paused"
+        tooltip="Paused ($completed sessions) - click to resume"
+    fi
+fi
+
+echo "{\"text\": \"$text\", \"tooltip\": \"$tooltip\", \"class\": \"$class\"}"

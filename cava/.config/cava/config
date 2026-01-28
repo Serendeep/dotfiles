@@ -1,0 +1,17 @@
+[general]
+framerate = 60
+bars = 8
+bar_width = 1
+bar_spacing = 0
+
+[output]
+method = raw
+raw_target = /dev/stdout
+data_format = ascii
+ascii_max_range = 7
+
+[color]
+foreground = '#b4a7d6'
+
+[smoothing]
+noise_reduction = 77

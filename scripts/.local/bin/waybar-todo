@@ -1,0 +1,33 @@
+#!/bin/bash
+# Waybar Todo Widget
+# Shows count of pending items from todo.txt
+
+TODO_FILE="$HOME/.local/share/todo.txt"
+
+# Create file if not exists
+if [ ! -f "$TODO_FILE" ]; then
+    mkdir -p "$(dirname "$TODO_FILE")"
+    touch "$TODO_FILE"
+fi
+
+# Count non-empty, non-done lines
+PENDING=$(grep -cvE '^(x |#|$)' "$TODO_FILE" 2>/dev/null)
+PENDING=${PENDING:-0}
+# Handle grep returning nothing
+if ! [[ "$PENDING" =~ ^[0-9]+$ ]]; then
+    PENDING=0
+fi
+
+DONE=$(grep -c '^x ' "$TODO_FILE" 2>/dev/null)
+DONE=${DONE:-0}
+if ! [[ "$DONE" =~ ^[0-9]+$ ]]; then
+    DONE=0
+fi
+
+if [ "$PENDING" -eq 0 ]; then
+    echo '{"text": "󰄬", "tooltip": "All done! ('"$DONE"' completed)", "class": "done"}'
+else
+    # Get first pending item for tooltip (escape for JSON)
+    FIRST=$(grep -vE '^(x |#|$)' "$TODO_FILE" 2>/dev/null | head -1 | sed 's/"/\\"/g')
+    echo '{"text": "󰄱 '"$PENDING"'", "tooltip": "'"$PENDING"' pending, '"$DONE"' done\nNext: '"$FIRST"'", "class": "pending"}'
+fi

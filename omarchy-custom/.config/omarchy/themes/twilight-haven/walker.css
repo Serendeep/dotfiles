@@ -1,0 +1,22 @@
+@define-color base #0f0f14;
+@define-color text #e8e6e3;
+@define-color border #b4a7d6;
+@define-color selected-text #0f0f14;
+@define-color selected-background #b4a7d6;
+@define-color muted #3d3d47;
+
+.box-wrapper {
+    background: alpha(@base, 0.92);
+    border: 2px solid alpha(@border, 0.8);
+    border-radius: 12px;
+}
+
+.search-container {
+    background: alpha(@base, 0.95);
+    border-radius: 8px;
+}
+
+child:selected .item-box {
+    background: alpha(@selected-background, 0.9);
+    border-radius: 6px;
+}

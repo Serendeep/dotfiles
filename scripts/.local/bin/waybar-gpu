@@ -1,0 +1,27 @@
+#!/bin/bash
+# Waybar GPU module - NVIDIA temperature and utilization
+
+if ! command -v nvidia-smi &>/dev/null; then
+    echo '{"text": "", "tooltip": "nvidia-smi not found"}'
+    exit 0
+fi
+
+IFS=', ' read -r temp util < <(nvidia-smi --query-gpu=temperature.gpu,utilization.gpu --format=csv,noheader,nounits 2>/dev/null)
+util=${util:-0}
+
+if [ -z "$temp" ]; then
+    echo '{"text": "", "tooltip": "GPU not available"}'
+    exit 0
+fi
+
+class="normal"
+[ "$temp" -ge 75 ] && class="warning"
+[ "$temp" -ge 85 ] && class="critical"
+
+if [ "$util" -gt 0 ]; then
+    text="󰢮 ${temp}°"
+else
+    text="󰢮"
+fi
+
+echo "{\"text\": \"$text\", \"tooltip\": \"GPU: ${temp}°C  ${util}% util\", \"class\": \"$class\"}"

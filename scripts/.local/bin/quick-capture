@@ -1,0 +1,32 @@
+#!/bin/bash
+# Quick Capture Notes
+# Opens a popup to quickly jot down a note
+
+NOTES_DIR="$HOME/notes"
+CAPTURE_FILE="$NOTES_DIR/quick-capture.md"
+
+# Create directory if not exists
+mkdir -p "$NOTES_DIR"
+
+# Create file with header if not exists
+if [ ! -f "$CAPTURE_FILE" ]; then
+    echo "# Quick Captures" > "$CAPTURE_FILE"
+    echo "" >> "$CAPTURE_FILE"
+fi
+
+# Get input via walker dmenu or zenity fallback
+if command -v walker &>/dev/null; then
+    NOTE=$(echo "" | walker --dmenu --placeholder "Quick note...")
+elif command -v zenity &>/dev/null; then
+    NOTE=$(zenity --entry --title="Quick Capture" --text="Enter note:" 2>/dev/null)
+else
+    notify-send "Quick Capture" "No input method available (install walker or zenity)"
+    exit 1
+fi
+
+# Save note if not empty
+if [ -n "$NOTE" ]; then
+    TIMESTAMP=$(date "+%Y-%m-%d %H:%M")
+    echo "- [$TIMESTAMP] $NOTE" >> "$CAPTURE_FILE"
+    notify-send "Quick Capture" "Note saved"
+fi

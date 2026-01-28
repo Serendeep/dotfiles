@@ -1,0 +1,21 @@
+window {
+    background: alpha(#0f0f14, 0.92);
+    color: #e8e6e3;
+    border-radius: 12px;
+    border: 1px solid alpha(#b4a7d6, 0.6);
+    padding: 12px;
+}
+
+progressbar {
+    background: #3d3d47;
+    border-radius: 4px;
+}
+
+progress {
+    background: #b4a7d6;
+    border-radius: 4px;
+}
+
+image {
+    color: #b4a7d6;
+}

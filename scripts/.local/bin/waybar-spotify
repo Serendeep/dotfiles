@@ -1,0 +1,35 @@
+#!/bin/bash
+# Waybar Spotify indicator
+# Shows currently playing track with Spotify icon
+
+get_status() {
+    playerctl -p spotify status 2>/dev/null
+}
+
+get_metadata() {
+    local artist=$(playerctl -p spotify metadata artist 2>/dev/null)
+    local title=$(playerctl -p spotify metadata title 2>/dev/null)
+
+    if [ -n "$title" ]; then
+        if [ -n "$artist" ]; then
+            echo "$artist - $title"
+        else
+            echo "$title"
+        fi
+    fi
+}
+
+STATUS=$(get_status)
+METADATA=$(get_metadata)
+
+if [ "$STATUS" = "Playing" ]; then
+    # Truncate long text
+    if [ ${#METADATA} -gt 40 ]; then
+        METADATA="${METADATA:0:37}..."
+    fi
+    echo "{\"text\": \"  $METADATA\", \"tooltip\": \"$METADATA\", \"class\": \"playing\"}"
+elif [ "$STATUS" = "Paused" ]; then
+    echo "{\"text\": \"\", \"tooltip\": \"Spotify paused\", \"class\": \"paused\"}"
+else
+    echo "{\"text\": \"\", \"tooltip\": \"\", \"class\": \"stopped\"}"
+fi

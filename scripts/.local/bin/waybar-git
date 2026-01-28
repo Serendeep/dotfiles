@@ -1,0 +1,58 @@
+#!/bin/bash
+# Waybar Git Status Widget
+# Shows current branch and dirty status for focused terminal
+
+# Try to get CWD from focused window (terminal)
+get_terminal_cwd() {
+    local pid=$(hyprctl activewindow -j 2>/dev/null | jq -r '.pid // empty')
+    if [ -n "$pid" ]; then
+        # Get child process (shell) of terminal
+        local child=$(pgrep -P "$pid" 2>/dev/null | head -1)
+        if [ -n "$child" ]; then
+            readlink -f "/proc/$child/cwd" 2>/dev/null
+        fi
+    fi
+}
+
+CWD=$(get_terminal_cwd)
+
+# Check if in git repo
+if [ -z "$CWD" ] || [ ! -d "$CWD/.git" ] && ! git -C "$CWD" rev-parse --git-dir &>/dev/null 2>&1; then
+    echo '{"text": "", "class": "hidden"}'
+    exit 0
+fi
+
+cd "$CWD" || exit 0
+
+# Get branch name
+BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null || git describe --tags --exact-match 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
+
+# Check for changes
+DIRTY=""
+ICON="󰊢"
+CLASS="clean"
+
+if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
+    DIRTY="*"
+    ICON="󰊢"
+    CLASS="dirty"
+fi
+
+# Count ahead/behind
+AHEAD=$(git rev-list --count @{u}..HEAD 2>/dev/null || echo 0)
+BEHIND=$(git rev-list --count HEAD..@{u} 2>/dev/null || echo 0)
+
+SYNC=""
+if [ "$AHEAD" -gt 0 ]; then
+    SYNC+="↑$AHEAD"
+fi
+if [ "$BEHIND" -gt 0 ]; then
+    SYNC+="↓$BEHIND"
+fi
+
+TEXT="$ICON $BRANCH$DIRTY"
+if [ -n "$SYNC" ]; then
+    TEXT+=" $SYNC"
+fi
+
+echo "{\"text\": \"$TEXT\", \"tooltip\": \"Branch: $BRANCH\\nStatus: $(git status -s | wc -l) changes\", \"class\": \"$CLASS\"}"

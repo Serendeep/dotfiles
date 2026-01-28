@@ -1,0 +1,38 @@
+#!/bin/bash
+# Waybar Cava Audio Visualizer
+# Outputs unicode bar characters based on cava output
+
+BARS="▁▂▃▄▅▆▇█"
+CHECK_INTERVAL=0
+LAST_STATUS=""
+
+# Run cava and convert output to unicode bars
+cava -p ~/.config/cava/config 2>/dev/null | while IFS=';' read -ra values; do
+    # Check playback status every ~30 iterations (~1 second at 30fps)
+    CHECK_INTERVAL=$((CHECK_INTERVAL + 1))
+    if [ $CHECK_INTERVAL -ge 30 ]; then
+        CHECK_INTERVAL=0
+        CURRENT_STATUS=$(playerctl status 2>/dev/null)
+        if [ "$CURRENT_STATUS" != "Playing" ]; then
+            if [ "$LAST_STATUS" != "hidden" ]; then
+                echo '{"text": "", "class": "hidden"}'
+                LAST_STATUS="hidden"
+            fi
+            continue
+        fi
+        LAST_STATUS="playing"
+    fi
+
+    # Skip if we're in hidden state
+    [ "$LAST_STATUS" = "hidden" ] && continue
+
+    output=""
+    for val in "${values[@]}"; do
+        # Skip empty values
+        [ -z "$val" ] && continue
+        # val is 0-7, map to bar character
+        idx=$((val > 7 ? 7 : val))
+        output+="${BARS:$idx:1}"
+    done
+    [ -n "$output" ] && echo "{\"text\": \"$output\", \"class\": \"playing\"}"
+done

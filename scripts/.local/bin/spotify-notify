@@ -1,0 +1,65 @@
+#!/bin/bash
+# Spotify Now Playing Notifications
+# Monitors playerctl for track changes and sends notifications
+
+LAST_TRACK=""
+CACHE_DIR="$HOME/.cache/spotify-notify"
+mkdir -p "$CACHE_DIR"
+
+get_album_art() {
+    local url="$1"
+    local hash=$(echo "$url" | md5sum | cut -d' ' -f1)
+    local cache_file="$CACHE_DIR/$hash.jpg"
+
+    if [ ! -f "$cache_file" ] && [ -n "$url" ]; then
+        curl -s "$url" -o "$cache_file" 2>/dev/null
+    fi
+
+    if [ -f "$cache_file" ]; then
+        echo "$cache_file"
+    fi
+}
+
+send_notification() {
+    local artist="$1"
+    local title="$2"
+    local album="$3"
+    local art_url="$4"
+
+    local icon=""
+    if [ -n "$art_url" ]; then
+        icon=$(get_album_art "$art_url")
+    fi
+
+    if [ -n "$icon" ] && [ -f "$icon" ]; then
+        notify-send -i "$icon" "$title" "$artist
+$album" -a "Spotify"
+    else
+        notify-send "󰓇 $title" "$artist
+$album" -a "Spotify"
+    fi
+}
+
+# Monitor playerctl for metadata changes using tab delimiter
+playerctl -p spotify metadata --format $'{{artist}}\t{{title}}\t{{album}}\t{{mpris:artUrl}}' --follow 2>/dev/null | while IFS=$'\t' read -r artist title album art_url; do
+    # Skip if same track
+    TRACK_ID="${artist}-${title}"
+    if [ "$TRACK_ID" = "$LAST_TRACK" ]; then
+        continue
+    fi
+    LAST_TRACK="$TRACK_ID"
+
+    # Skip empty metadata
+    if [ -z "$title" ]; then
+        continue
+    fi
+
+    # Small delay to avoid spam during seek
+    sleep 0.5
+
+    # Verify still playing same track
+    CURRENT=$(playerctl -p spotify metadata --format '{{artist}}-{{title}}' 2>/dev/null)
+    if [ "$CURRENT" = "$TRACK_ID" ]; then
+        send_notification "$artist" "$title" "$album" "$art_url"
+    fi
+done

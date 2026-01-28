@@ -1,0 +1,244 @@
+{
+  "reload_style_on_change": true,
+  "layer": "top",
+  "position": "top",
+  "spacing": 0,
+  "height": 26,
+  "margin-top": 8,
+  "margin-left": 10,
+  "margin-right": 10,
+  "modules-left": ["custom/omarchy", "hyprland/workspaces"],
+  "modules-center": ["hyprland/window", "clock", "custom/spotify", "custom/cava", "custom/pomodoro", "custom/update", "custom/voxtype", "custom/screenrecording-indicator"],
+  "modules-right": [
+    "custom/weather",
+    "custom/git",
+    "custom/docker",
+    "custom/todo",
+    "group/tray-expander",
+    "bluetooth",
+    "network",
+    "custom/netspeed",
+    "memory",
+    "pulseaudio",
+    "cpu",
+    "custom/gpu",
+    "custom/systemd",
+    "battery"
+  ],
+  "hyprland/workspaces": {
+    "on-click": "activate",
+    "format": "{icon}",
+    "format-icons": {
+      "default": "",
+      "1": "1",
+      "2": "2",
+      "3": "3",
+      "4": "4",
+      "5": "5",
+      "6": "6",
+      "7": "7",
+      "8": "8",
+      "9": "9",
+      "10": "0",
+      "active": "󱓻"
+    },
+    "persistent-workspaces": {
+      "1": [],
+      "2": [],
+      "3": [],
+      "4": [],
+      "5": []
+    }
+  },
+  "hyprland/window": {
+    "format": "{title}",
+    "max-length": 35,
+    "separate-outputs": true,
+    "rewrite": {
+      "(.*) — Zen Browser": "󰈹 $1",
+      "(.*) - Visual Studio Code - Insiders": "󰨞 $1",
+      "(.*) - Visual Studio Code": "󰨞 $1",
+      "(.*) - Cursor": "󰨞 $1",
+      "nvim (.*)": " $1",
+      "": ""
+    }
+  },
+  "custom/weather": {
+    "exec": "curl -s 'wttr.in/?format=%c+%t' | tr -d '+'",
+    "interval": 1800,
+    "tooltip": false
+  },
+  "custom/omarchy": {
+    "format": "<span font='omarchy'>\ue900</span>",
+    "on-click": "omarchy-menu",
+    "on-click-right": "xdg-terminal-exec",
+    "tooltip-format": "Omarchy Menu\n\nSuper + Alt + Space"
+  },
+  "custom/update": {
+    "format": "",
+    "exec": "omarchy-update-available",
+    "on-click": "omarchy-launch-floating-terminal-with-presentation omarchy-update",
+    "tooltip-format": "Omarchy update available",
+    "signal": 7,
+    "interval": 3600
+  },
+
+  "custom/spotify": {
+    "exec": "~/.local/bin/waybar-spotify",
+    "return-type": "json",
+    "interval": 2,
+    "on-click": "playerctl -p spotify play-pause",
+    "on-click-right": "~/.local/bin/omarchy-scratchpad-music",
+    "on-scroll-up": "playerctl -p spotify next",
+    "on-scroll-down": "playerctl -p spotify previous"
+  },
+  "cpu": {
+    "interval": 5,
+    "format": "󰍛",
+    "on-click": "omarchy-launch-or-focus-tui btop"
+  },
+  "clock": {
+    "format": "{:L%A %H:%M}",
+    "format-alt": "{:L%d %B W%V %Y}",
+    "tooltip": false,
+    "on-click-right": "omarchy-launch-floating-terminal-with-presentation omarchy-tz-select"
+  },
+  "network": {
+    "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
+    "format": "{icon}",
+    "format-wifi": "{icon}",
+    "format-ethernet": "󰀂",
+    "format-disconnected": "󰤮",
+    "tooltip-format-wifi": "{essid} ({frequency} GHz)\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
+    "tooltip-format-ethernet": "⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
+    "tooltip-format-disconnected": "Disconnected",
+    "interval": 3,
+    "spacing": 1,
+    "on-click": "omarchy-launch-wifi"
+  },
+  "battery": {
+    "format": "{capacity}% {icon}",
+    "format-discharging": "{icon}",
+    "format-charging": "{icon}",
+    "format-plugged": "",
+    "format-icons": {
+      "charging": ["󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"],
+      "default": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+    },
+    "format-full": "󰂅",
+    "tooltip-format-discharging": "{power:>1.0f}W↓ {capacity}%",
+    "tooltip-format-charging": "{power:>1.0f}W↑ {capacity}%",
+    "interval": 5,
+    "on-click": "omarchy-menu power",
+    "states": {
+      "warning": 20,
+      "critical": 10
+    }
+  },
+  "bluetooth": {
+    "format": "",
+    "format-disabled": "󰂲",
+    "format-off": "󰂲",
+    "format-connected": "󰂱",
+    "format-no-controller": "",
+    "tooltip-format": "Devices connected: {num_connections}",
+    "on-click": "omarchy-launch-bluetooth"
+  },
+  "pulseaudio": {
+    "format": "{icon}",
+    "on-click": "omarchy-launch-audio",
+    "on-click-right": "pamixer -t",
+    "tooltip-format": "Playing at {volume}%",
+    "scroll-step": 5,
+    "format-muted": "",
+    "format-icons": {
+      "headphone": "",
+      "default": ["", "", ""]
+    }
+  },
+  "group/tray-expander": {
+    "orientation": "inherit",
+    "drawer": {
+      "transition-duration": 600,
+      "children-class": "tray-group-item"
+    },
+    "modules": ["custom/expand-icon", "tray"]
+  },
+  "custom/expand-icon": {
+    "format": " ",
+    "tooltip": false
+  },
+  "custom/screenrecording-indicator": {
+    "on-click": "omarchy-cmd-screenrecord",
+    "exec": "$OMARCHY_PATH/default/waybar/indicators/screen-recording.sh",
+    "signal": 8,
+    "return-type": "json"
+  },
+  "custom/voxtype": {
+    "exec": "omarchy-voxtype-status",
+    "return-type": "json",
+    "format": "{icon}",
+    "format-icons": {
+      "idle": "",
+      "recording": "󰍬",
+      "transcribing": "󰔟"
+    },
+    "tooltip": true,
+    "on-click-right": "omarchy-voxtype-config",
+    "on-click": "omarchy-voxtype-model"
+  },
+  "tray": {
+    "icon-size": 12,
+    "spacing": 12
+  },
+  "custom/pomodoro": {
+    "exec": "~/.local/bin/waybar-pomodoro",
+    "return-type": "json",
+    "interval": 1,
+    "on-click": "~/.local/bin/waybar-pomodoro toggle",
+    "on-click-right": "~/.local/bin/waybar-pomodoro reset"
+  },
+  "custom/cava": {
+    "exec": "~/.local/bin/waybar-cava",
+    "return-type": "json"
+  },
+  "custom/netspeed": {
+    "exec": "~/.local/bin/waybar-netspeed",
+    "return-type": "json",
+    "interval": 2
+  },
+  "custom/git": {
+    "exec": "~/.local/bin/waybar-git",
+    "return-type": "json",
+    "interval": 5,
+    "on-click": "omarchy-launch-tui lazygit"
+  },
+  "custom/docker": {
+    "exec": "~/.local/bin/waybar-docker",
+    "return-type": "json",
+    "interval": 10,
+    "on-click": "omarchy-launch-tui lazydocker"
+  },
+  "custom/todo": {
+    "exec": "~/.local/bin/waybar-todo",
+    "return-type": "json",
+    "interval": 5,
+    "on-click": "omarchy-launch-floating-terminal-with-presentation 'nvim ~/.local/share/todo.txt'"
+  },
+  "custom/gpu": {
+    "exec": "~/.local/bin/waybar-gpu",
+    "return-type": "json",
+    "interval": 5
+  },
+  "custom/systemd": {
+    "exec": "~/.local/bin/waybar-systemd",
+    "return-type": "json",
+    "interval": 30
+  },
+  "memory": {
+    "interval": 5,
+    "format": "󰍛 {percentage}%",
+    "tooltip-format": "RAM: {used:0.1f}GB / {total:0.1f}GB",
+    "on-click": "omarchy-launch-or-focus-tui btop"
+  }
+}

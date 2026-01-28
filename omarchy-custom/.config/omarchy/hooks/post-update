@@ -1,0 +1,30 @@
+#!/bin/bash
+# Create Timeshift snapshot after every omarchy-update
+# Keep only the latest 3 snapshots
+
+MAX_SNAPSHOTS=3
+TIMESTAMP=$(date +%Y-%m-%d_%H:%M)
+COMMENT="Pre-update snapshot - $TIMESTAMP"
+
+if command -v timeshift &> /dev/null; then
+    notify-send "Timeshift" "Creating system snapshot..." -a "Omarchy"
+
+    # Create new snapshot
+    sudo timeshift --create --comments "$COMMENT" --tags O
+
+    # Get list of O-tagged snapshots (oldest first)
+    SNAPSHOTS=$(sudo timeshift --list 2>/dev/null | grep -E '^\s*[0-9]+>' | grep ' O ' | awk '{print $2}')
+    COUNT=$(echo "$SNAPSHOTS" | wc -l)
+
+    # Delete oldest if we have more than MAX
+    if [ "$COUNT" -gt "$MAX_SNAPSHOTS" ]; then
+        DELETE_COUNT=$((COUNT - MAX_SNAPSHOTS))
+        TO_DELETE=$(echo "$SNAPSHOTS" | head -n $DELETE_COUNT)
+        for SNAP in $TO_DELETE; do
+            notify-send "Timeshift" "Removing old snapshot: $SNAP" -a "Omarchy"
+            sudo timeshift --delete --snapshot "$SNAP"
+        done
+    fi
+
+    notify-send "Timeshift" "Snapshot created successfully" -a "Omarchy"
+fi
