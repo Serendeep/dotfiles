@@ -12,7 +12,7 @@ DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 STOW_PACKAGES=(
   shell git hypr waybar walker terminals starship nvim
   omarchy-custom spicetify systemd-user scripts btop
-  fastfetch cava mise
+  fastfetch cava mise claude
 )
 
 info()  { echo -e "\033[1;34m::\033[0m $*"; }

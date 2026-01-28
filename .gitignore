@@ -5,4 +5,5 @@ nvim/.config/nvim/lazy-lock.json
 spicetify/.config/spicetify/CustomApps/
 spicetify/.config/spicetify/Extensions/
 omarchy-custom/.config/omarchy/current/
+__pycache__/
 .DS_Store

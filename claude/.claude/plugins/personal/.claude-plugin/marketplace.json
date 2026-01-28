@@ -1,0 +1,22 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "personal",
+  "description": "Personal plugin marketplace for custom Claude Code plugins",
+  "owner": {
+    "name": "serendeep"
+  },
+  "plugins": [
+    {
+      "name": "omni-agent",
+      "source": "./omni-agent",
+      "description": "Comprehensive multi-skilled agent with project management, code review, LaTeX, Arch Linux expertise, and strict guardrails",
+      "version": "1.0.0",
+      "author": {
+        "name": "serendeep"
+      },
+      "category": "productivity",
+      "tags": ["project-management", "code-review", "latex", "arch-linux", "guardrails", "git", "testing", "api-docs"],
+      "keywords": ["omni", "agent", "toolkit", "comprehensive", "safety"]
+    }
+  ]
+}

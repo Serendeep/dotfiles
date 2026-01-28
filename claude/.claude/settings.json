@@ -1,0 +1,48 @@
+{
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "enabledPlugins": {
+    "omni-agent@personal": true,
+    "context7@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "jdtls-lsp@claude-plugins-official": true,
+    "context7-docs-fetcher@awesome-claude-code-plugins": true,
+    "flutter-mobile-app-dev@awesome-claude-code-plugins": true,
+    "frontend-developer@awesome-claude-code-plugins": true,
+    "lyra@awesome-claude-code-plugins": true,
+    "mobile-ux-optimizer@awesome-claude-code-plugins": true,
+    "model-context-protocol-mcp-expert@awesome-claude-code-plugins": true,
+    "optimize@awesome-claude-code-plugins": true,
+    "plan@awesome-claude-code-plugins": true,
+    "ui-designer@awesome-claude-code-plugins": true,
+    "ultrathink@awesome-claude-code-plugins": true,
+    "web-dev@awesome-claude-code-plugins": true,
+    "jvm-languages@claude-code-workflows": true,
+    "document-skills@ando-marketplace": true,
+    "ai-engineer@awesome-claude-code-plugins": true,
+    "backend-architect@awesome-claude-code-plugins": true,
+    "backend-development@claude-code-workflows": true,
+    "llm-application-dev@claude-code-workflows": true,
+    "superpowers@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "hookify@claude-plugins-official": true,
+    "gopls-lsp@claude-plugins-official": true,
+    "huggingface-skills@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "claude-code-setup@claude-plugins-official": true,
+    "plugin-dev@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "personal": {
+      "source": {
+        "source": "directory",
+        "path": "/home/serendeep/.claude/plugins/personal"
+      }
+    }
+  },
+  "alwaysThinkingEnabled": true
+}

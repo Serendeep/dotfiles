@@ -61,6 +61,7 @@ btop/            system monitor config
 fastfetch/       system info display
 cava/            audio visualizer
 mise/            dev tool version manager
+claude/          Claude Code config, personal omni-agent plugin, humanizer skill
 packages/        pacman + AUR + flatpak package lists
 ```
 
