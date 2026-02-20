@@ -49,6 +49,13 @@ alias lt='eza --tree --icons'
 alias cat='bat'
 alias grep='rg'
 
+# tmux
+alias ta='tmux attach -t'
+alias tl='tmux list-sessions'
+alias tn='tmux new-session -s'
+alias tk='tmux kill-session -t'
+alias ts='tmux-sessionizer'
+
 # NVM lazy loading (faster shell startup)
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --no-use
 alias node='unalias node npm npx 2>/dev/null; nvm use default >/dev/null; node'
@@ -73,7 +80,9 @@ eval "$(starship init zsh)"
 # Dart completions
 [ -f ~/.config/.dart-cli-completion/zsh-config.zsh ] && source ~/.config/.dart-cli-completion/zsh-config.zsh
 
+export PATH="$HOME/.local/bin:$PATH"
+
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-export PATH="$HOME/.local/bin:$PATH"
+

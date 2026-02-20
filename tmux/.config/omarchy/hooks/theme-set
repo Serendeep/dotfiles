@@ -1,0 +1,4 @@
+#!/bin/bash
+if command -v tmux &>/dev/null && tmux list-sessions &>/dev/null 2>&1; then
+  tmux source-file ~/.config/tmux/tmux.conf 2>/dev/null
+fi

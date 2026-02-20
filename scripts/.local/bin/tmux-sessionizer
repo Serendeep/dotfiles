@@ -1,0 +1,40 @@
+#!/bin/bash
+# tmux-sessionizer: create or attach to a project-based tmux session
+# Uses the same PROJECTS_DIR convention as omarchy-project-switcher
+
+PROJECTS_DIR="${PROJECTS_DIR:-/mnt/Storage/Development}"
+
+# Build search paths from colon-separated list
+IFS=':' read -ra PATHS <<< "$PROJECTS_DIR"
+SEARCH_PATHS=()
+for path in "${PATHS[@]}"; do
+  [[ -d "$path" ]] && SEARCH_PATHS+=("$path")
+done
+
+if [[ ${#SEARCH_PATHS[@]} -eq 0 ]]; then
+  echo "No project directories found. Set PROJECTS_DIR env var."
+  exit 1
+fi
+
+# Find git repos and pick one with fzf
+selected=$(find "${SEARCH_PATHS[@]}" -maxdepth 3 -type d -name ".git" 2>/dev/null \
+  | sed 's|/.git$||' \
+  | sort -u \
+  | fzf --reverse --header="Select project")
+
+[[ -z "$selected" ]] && exit 0
+
+# Derive session name from directory (replace dots/spaces with dashes)
+session_name=$(basename "$selected" | tr './ ' '-')
+
+# Create session if it doesn't exist
+if ! tmux has-session -t="$session_name" 2>/dev/null; then
+  tmux new-session -d -s "$session_name" -c "$selected"
+fi
+
+# Attach or switch depending on context
+if [[ -z "$TMUX" ]]; then
+  tmux attach-session -t "$session_name"
+else
+  tmux switch-client -t "$session_name"
+fi

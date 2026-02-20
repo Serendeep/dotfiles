@@ -12,7 +12,7 @@ DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 STOW_PACKAGES=(
   shell git hypr waybar walker terminals starship nvim
   omarchy-custom spicetify systemd-user scripts btop
-  fastfetch cava mise claude
+  fastfetch cava mise claude tmux
 )
 
 info()  { echo -e "\033[1;34m::\033[0m $*"; }
@@ -83,6 +83,19 @@ if [[ ! -d "$ZINIT_HOME" ]]; then
   "
 fi
 ok "zinit is available"
+
+# --- TPM (Tmux Plugin Manager) ---
+
+info "Checking TPM..."
+TPM_DIR="$HOME/.local/share/tmux/plugins/tpm"
+if [[ ! -d "$TPM_DIR" ]]; then
+  info "Installing TPM..."
+  run bash -c "
+    mkdir -p \"\$(dirname $TPM_DIR)\"
+    git clone https://github.com/tmux-plugins/tpm \"$TPM_DIR\"
+  "
+fi
+ok "TPM is available"
 
 # --- Stow packages ---
 

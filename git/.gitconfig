@@ -26,3 +26,7 @@
 	syntax-theme = base16
 	side-by-side = false
 	line-numbers = true
+[safe]
+	directory = /mnt/Storage/Development/NLSv2
+	directory = /mnt/Storage/Development/chess-app
+	directory = /mnt/Storage/Development/personal-blog
