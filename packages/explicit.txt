@@ -2,8 +2,12 @@
 1password-cli
 aether
 alacritty
+alsa-tools
+alsa-utils
 amd-ucode
 aml
+aria2
+asusctl
 atuin
 bandwhich
 base
@@ -53,6 +57,7 @@ fcitx5-gtk
 fcitx5-qt
 fd
 ffmpegthumbnailer
+filezilla
 firefox
 flatpak
 fzf
@@ -120,6 +125,8 @@ libvirt
 linux
 linux-firmware
 linux-headers
+linux-lts
+linux-lts-headers
 llvm
 localsend
 luarocks
@@ -136,6 +143,7 @@ neatvnc
 neovim
 networkmanager
 newsflash
+noise-suppression-for-voice
 noto-fonts
 noto-fonts-cjk
 noto-fonts-emoji
@@ -170,8 +178,10 @@ python-terminaltexteffects
 qemu-full
 qemu-img
 qt5-wayland
+reflector
 retroarch
 ripgrep
+rog-control-center
 ruby
 rust
 satty
@@ -184,6 +194,7 @@ spotify
 starship
 steam
 stow
+supergfxctl
 sushi
 swaybg
 swayosd
@@ -199,6 +210,7 @@ texlive-latexrecommended
 texlive-luatex
 texstudio
 timeshift
+tmux
 tobi-try
 tokei
 trash-cli
